@@ -47,7 +47,7 @@ resource "aws_instance" "blog" {
   }
 }
 
-module "alb" {
+module "blog_alb" {
   source = "terraform-aws-modules/alb/aws"
 
   name    = "blog-alb"
@@ -56,7 +56,7 @@ module "alb" {
   security_groups = [module.blog_sg.security_group_id]
 
   access_logs = {
-    bucket = "my-alb-logs"
+    bucket = "blog-alb-logs"
   }
 
   listeners = {
@@ -67,21 +67,14 @@ module "alb" {
     }
   }
 
-  target_groups = [
-    {
+  target_groups = {
+    blog-target {
       name_prefix      = "blog"
       protocol         = "HTTP"
       port             = 80
       target_type      = "instance"
-
-      targets = {
-        blog_target = {
-          target_id = aws_instance.blog.id
-          port = 80
-        }
-      }
     }
-  ]
+  }
 
   tags = {
     Environment = "dev"
