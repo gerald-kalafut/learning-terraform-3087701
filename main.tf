@@ -18,7 +18,6 @@ data "aws_vpc" "default" {
   default = true
 }
 
-
 module "blog_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
@@ -50,8 +49,11 @@ resource "aws_instance" "blog" {
 module "blog_alb" {
   source = "terraform-aws-modules/alb/aws"
   version = "~> 6.0"
+  name    = "blog-alb"
 
-  name            = "blog-alb"
+  vpc_id  = module.blog_vpc.vpc_id
+  subnets = module.blog_vpc.public_subnets
+
   load_balancer_type = "application"
 
   vpc_id          = module.blog_vpc.vpc_id
