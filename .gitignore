@@ -1,0 +1,6 @@
+.envrc
+
+terraform.tfstate
+terraform.tfstate.backup
+
+run-*-apply-log.txt
